@@ -1,0 +1,56 @@
+# linux debian
+*.deb
+# linux redhat
+*.rpm        
+# macos
+*.dmg
+# windows
+*.exe
+*.pyc
+# java
+*.class
+# node
+node_modules
+# python
+__pycache__
+*.egg-info
+*.egg
+*.whl
+*.pyo
+*.pyd
+*.pdb
+# envs
+.venv
+# virtualenv
+env
+# conda
+envs
+# jupyter
+.ipynb_checkpoints
+# pycharm
+.idea
+# vscode
+.vscode
+# pyright
+*.pyright
+# mypy
+.mypy_cache
+# coverage
+.coverage
+# pytest
+*.cover
+# coverage
+.coverage.*
+# pytype
+.pytype
+# pyre
+.pyre
+
+# pyinstaller
+*.spec
+
+# git
+.git
+
+.env
+

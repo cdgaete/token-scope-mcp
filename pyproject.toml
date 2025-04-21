@@ -1,0 +1,79 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tokenscope"
+version = "0.1.0"
+description = "TokenScope: Token-Aware Directory Explorer for LLMs"
+authors = [
+    {name = "Carlos Gaete", email = "cdgaete@gmail.com"},
+]
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+keywords = ["mcp", "directory", "explorer", "claude", "ai", "assistant", "token-aware"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "fastmcp>=0.1.0",
+    "tiktoken>=0.5.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/cdgaete/token-scope-mcp"
+"Bug Tracker" = "https://github.com/cdgaete/token-scope-mcp/issues"
+"Source Code" = "https://github.com/cdgaete/token-scope-mcp"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=23.1.0",
+    "ruff>=0.0.263",
+    "build>=0.10.0",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["tokenscope"]
+
+# This makes the package accessible via `uv run` or direct command execution
+[project.scripts]
+tokenscope = "tokenscope.server:main"
+
+# Override the extra-index-url from the global config
+[tool.uv]
+index-url = "https://pypi.org/simple"
+extra-index-url = []
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+include = '\.pyi?$'
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+select = [
+    "E", 
+    "F", 
+    # "W", 
+    # "I", 
+    "N", 
+    "B", 
+    "C4", 
+    "UP"
+    ]
+ignore = ["E402", "E501"]  # Allow long lines
+
+[tool.ruff.isort]
+known-first-party = ["tokenscope"]
