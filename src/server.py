@@ -14,8 +14,7 @@ parser = argparse.ArgumentParser(description="TokenScope: Token-Aware Directory 
 parser.add_argument("--base-path", type=str, help="Base directory for security validation. All file operations will be restricted to this directory.")
 args = parser.parse_args()
 
-# Import from our package
-from tokenscope import token_scope
+from tokenscope.token_scope import mcp, set_base_path
 
 if args.base_path is None:
     raise ValueError("Base path is required.")
@@ -25,12 +24,13 @@ if not os.path.exists(args.base_path) or not os.path.isdir(args.base_path):
 # Use absolute path
 base_path = os.path.abspath(args.base_path)
 
-token_scope.BASE_PATH = base_path
+# Set the base path for the MCP server
+set_base_path(base_path)
 
 def main():
     """Main entry point for the TokenScope server."""
     try:
-        token_scope.mcp.run()
+        mcp.run()
         return 0
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)

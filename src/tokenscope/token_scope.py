@@ -24,7 +24,10 @@ from tokenscope.file_system import (
 )
 
 # Global base path for security validation
-BASE_PATH = None
+def set_base_path(base_path: str):
+    global BASE_PATH
+    BASE_PATH = base_path
+    
 
 # Create an MCP server
 mcp = FastMCP(

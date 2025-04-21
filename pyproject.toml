@@ -48,7 +48,7 @@ packages = ["tokenscope"]
 
 # This makes the package accessible via `uv run` or direct command execution
 [project.scripts]
-tokenscope = "tokenscope.server:main"
+tokenscope = "server:main"
 
 # Override the extra-index-url from the global config
 [tool.uv]
