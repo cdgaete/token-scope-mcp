@@ -54,3 +54,10 @@ envs
 
 .env
 
+# local
+*.local
+# dist
+dist
+# build
+build
+

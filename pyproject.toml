@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tokenscope"
-version = "0.1.0"
+version = "0.1.1"
 description = "TokenScope: Token-Aware Directory Explorer for LLMs"
 authors = [
     {name = "Carlos Gaete", email = "cdgaete@gmail.com"},
