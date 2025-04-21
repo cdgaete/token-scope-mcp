@@ -43,13 +43,13 @@ dev = [
     "build>=1.2.1",
 ]
 
-[tool.setuptools]
-package-dir = {"" = "src"}
-packages = ["tokenscope"]
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["tokenscope*"]
+namespaces = false
 
-# This makes the package accessible via `uv run` or direct command execution
 [project.scripts]
-tokenscope = "server:main"
+tokenscope = "tokenscope.server:main"
 
 # Override the extra-index-url from the global config
 [tool.uv]
