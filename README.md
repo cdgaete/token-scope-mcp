@@ -293,4 +293,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 - Built with [FastMCP](https://github.com/jlowin/fastmcp)
 - Uses [tiktoken](https://github.com/openai/tiktoken) for accurate token counting
+- This same concept was implemented originally in [repoai](https://github.com/cdgaete/repoai)
 - Inspired by the need to efficiently analyze codebases with LLMs
