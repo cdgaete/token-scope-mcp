@@ -1,52 +1,43 @@
 # TokenScope
 
-TokenScope is a token-aware directory explorer for Large Language Models.
+Token-Aware Directory Explorer for Large Language Models (LLMs).
 
-A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server for token-aware directory exploration and analysis, designed for Large Language Models (LLMs).
+A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that helps LLMs efficiently explore and understand codebases and directory structures.
 
 ## Overview
 
-TokenScope provides intelligent directory structure analysis and token-aware file content exploration. It helps LLMs like Claude understand codebases and directory structures by:
+TokenScope provides intelligent directory structure analysis and token-aware file content exploration designed for LLMs like Claude. It helps LLMs understand codebases by:
 
-1. Scanning directory structures with token-efficient summaries
-2. Extracting and analyzing file contents with token awareness
-3. Finding important files for codebase understanding
-4. Generating reports with relevant information
+1. Exploring directory structures with token-aware summarization
+2. Viewing file contents with token limitations in mind
+3. Generating comprehensive reports about directories
 
-## Features
+## Key Features
 
-- **Token-Aware Directory Scanning**
-  - Explores directories recursively with configurable depth
-  - Provides intelligent summaries for large directories
-  - Respects .gitignore files and custom ignore patterns
+### Token-Aware Directory Exploration
 
-- **File Content Analysis**
-  - Smart extraction of file contents that respects token limits
-  - Special handling for JSON and other structured files
-  - File selection prioritization based on importance
+- **Automatic summarization** for large directories while showing small directories in full
+- **Respect for token limits** to maximize useful information within constraints
+- **Built-in security** with base path validation
+- **Smart filtering** with default patterns and .gitignore support
+- **Accurate directory statistics** for even the largest directories
 
-- **Token Usage Statistics**
-  - Estimates tokens required to process directories
-  - Breaks down token usage by file extension
-  - Identifies token-heavy files
+### Simple, Intuitive Tools
 
-- **Comprehensive Reporting**
-  - Generates markdown reports with directory structure
-  - Includes token usage statistics
-  - Shows samples of important files
+TokenScope provides just three core tools:
 
-- **Security Features**
-  - Path validation to restrict operations to a specified base directory
-  - Prevents access to files outside the allowed base path
+1. `explore_directory` - Scan and understand directory structures
+2. `view_content` - Access file contents with token awareness
+3. `generate_report` - Create comprehensive reports (with option to save to file)
 
 ## Installation
 
 ### Prerequisites
 
 - Python 3.10 or higher
-- [uv](https://github.com/astral-sh/uv) (recommended for easy dependency management)
+- [uv](https://github.com/astral-sh/uv) (recommended for dependency management)
 
-### 1. Main Installation (PyPI)
+### Installation (PyPI)
 
 This is the recommended method for most users who just want to use TokenScope:
 
@@ -55,7 +46,7 @@ This is the recommended method for most users who just want to use TokenScope:
 uv pip install tokenscope
 ```
 
-#### Running TokenScope
+## Running TokenScope
 
 The `--base-path` argument is mandatory for security reasons. It restricts all file operations to the specified directory.
 
@@ -64,226 +55,138 @@ The `--base-path` argument is mandatory for security reasons. It restricts all f
 uv run --with tokenscope tokenscope --base-path /path/to/allowed/directory
 ```
 
-#### Configuring in Claude Desktop
+### Configuring in Claude Desktop
 
-1. Locate Claude Desktop's configuration file (typically in `~/.config/claude/config.json`)
+1. Locate Claude Desktop's configuration file (typically `~/.config/claude/config.json`)
 
 2. Add TokenScope to the `mcpServers` section:
 
-   ```json
-   "mcpServers": {
-     "TokenScope": {
-       "command": "uv",
-       "args": [
-         "run",
-         "--with",
-         "tokenscope",
-         "tokenscope",
-         "--base-path",
-         "/your/secure/base/path"
-       ]
-     }
-   }
-   ```
+  ```json
+  "mcpServers": {
+    "TokenScope": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--with",
+        "tokenscope",
+        "tokenscope",
+        "--base-path",
+        "/your/secure/base/path"
+      ]
+    }
+  }
+  ```
 
 3. Replace `/your/secure/base/path` with the directory you want to restrict operations to
 
 4. Save the configuration file and restart Claude Desktop
 
-### 2. Development Installation (from GitHub)
 
-For contributors or users who want to modify the code:
+## Usage
 
-```bash
-# Clone the repository
-git clone https://github.com/cdgaete/token-scope-mcp.git
-cd token-scope-mcp
+### Running TokenScope Server
 
-# Install development dependencies with uv
-uv pip install -e ".[dev]"
-```
-
-#### Running in Development Mode
+The `--base-path` argument is required for security (it restricts file operations to the specified directory):
 
 ```bash
-# Run the server directly with uv
-uv run --with fastmcp --with tiktoken src/server.py --base-path /path/to/allowed/directory
+tokenscope --base-path /path/to/allowed/directory
 ```
 
-#### Configuring Development Version in Claude Desktop
+### Testing Tools Directly
 
-1. Locate Claude Desktop's configuration file
+TokenScope includes a test mode for trying out tools directly:
 
-2. Add TokenScope to the `mcpServers` section with development paths:
+```bash
+# Test directory exploration
+tokenscope --base-path /path/to/allowed/directory --test "explore:/path/to/directory"
 
-   ```json
-   "mcpServers": {
-     "TokenScope (Dev)": {
-       "command": "uv",
-       "args": [
-         "run",
-         "--with",
-         "fastmcp",
-         "--with",
-         "tiktoken",
-         "/path/to/your/token-scope-mcp/src/server.py",
-         "--base-path",
-         "/your/secure/base/path"
-       ]
-     }
-   }
-   ```
+# Test with custom ignore patterns
+tokenscope --base-path /path/to/allowed/directory --test "explore:/path/to/directory?ignore=cache,*.log,tmp/&gitignore=false"
 
-3. Replace `/path/to/your/token-scope-mcp/src/server.py` with the actual path to the server.py file
-4. Replace `/your/secure/base/path` with your secure directory
+# Test file viewing
+tokenscope --base-path /path/to/allowed/directory --test "view:/path/to/file"
 
-## Security Features
+# Test report generation
+tokenscope --base-path /path/to/allowed/directory --test "report:/path/to/directory"
 
-The `--base-path` argument is mandatory for security reasons:
-
-- All file operations are validated to ensure they're within the specified directory
-- Attempts to access or modify files outside the base path will be rejected
-- The base path is set once when starting the server and cannot be changed without restart
+# Test report generation with file output and custom ignore patterns
+tokenscope --base-path /path/to/allowed/directory --test "report:/path/to/directory?ignore=*.bak,temp/ > /path/to/output.md"
+```
 
 ## Example Prompts
 
 Here are some examples of how to use TokenScope with Claude:
 
 ```text
-Please scan my project directory at /path/to/project and tell me about its structure, focusing on the most important files.
+Could you explore my project directory at /path/to/project and tell me about its structure?
 ```
 
 ```text
-Analyze the token usage in my project directory at /path/to/project and tell me how many tokens would be needed to process the entire codebase with an LLM.
+Can you show me the content of the file at /path/to/file.py?
 ```
 
 ```text
-Generate a comprehensive directory report about my project at /path/to/project, including structure, token statistics, and samples of the most important files.
+Please generate a comprehensive report about my project at /path/to/project and save it to /path/to/report.md
 ```
 
-## Available Tools
+## Accurate Directory Statistics
 
-The server provides the following MCP tools:
+TokenScope now provides two levels of directory information:
 
-### `scan_directory_structure`
+1. **Quick Scan Statistics**: Information about files and directories visible in the tree view
+2. **Full Directory Statistics**: Complete counts of ALL files and directories, even in very large repositories
 
-Scans a directory and returns its structure in a token-efficient way.
+This dual approach ensures that even for massive directories (with thousands or millions of files), you'll get accurate information about the total number of files, directories, and disk usage. This is especially valuable when working with large codebases where a complete directory listing would exceed token limits.
 
-```python
-scan_directory_structure(
-    path: str, 
-    depth: int = 3,
-    max_tokens: int = 10000,
-    ignore_patterns: list[str] | None = None,
-    include_gitignore: bool = True,
-    include_default_ignores: bool = True
-)
+### Example Output
+
+```txt
+QUICK SCAN STATISTICS (files visible in tree):
+Files shown in tree: 47
+Directories shown in tree: 16
+Size shown in tree: 185.9 MB
+
+FULL DIRECTORY STATISTICS (all files):
+Total files: 16,059
+Total directories: 8
+Total disk size: 2.1 GB
 ```
 
-### `extract_file_content`
+## Smart Filtering with Ignore Patterns
 
-Extracts the content of a specific file, respecting token limits and format.
+TokenScope automatically filters out common directories and files that typically don't contribute to understanding a codebase:
 
-```python
-extract_file_content(
-    file_path: str, 
-    max_tokens: int = 10000,
-    sample_only: bool = False
-)
+- **Default ignored patterns**: `.git/`, `.venv/`, `venv/`, `__pycache__/`, `node_modules/`, `build/`, `dist/`, etc.
+- **Custom ignore patterns**: You can specify additional patterns to ignore via the `ignore_patterns` parameter
+- **.gitignore support**: TokenScope can automatically respect .gitignore files in the directories it scans
+
+This functionality helps prevent token waste on irrelevant files and directories like:
+
+- Dependency directories (e.g., `node_modules`, virtual environments)
+- Build artifacts and cache directories
+- Version control metadata
+- IDE configuration files
+
+### Using Ignore Patterns in CLI Test Mode
+
+```bash
+# Ignore specific patterns
+tokenscope --base-path /path --test "explore:/code?ignore=*.log,temp/"
+
+# Disable .gitignore processing
+tokenscope --base-path /path --test "explore:/code?gitignore=false"
+
+# Both together
+tokenscope --base-path /path --test "explore:/code?ignore=*.tmp&gitignore=false"
 ```
 
-### `search_files_by_pattern`
+## Security Features
 
-Searches for files matching specified patterns within a directory structure.
+TokenScope includes important security features:
 
-```python
-search_files_by_pattern(
-    directory: str,
-    patterns: list[str],
-    max_depth: int = 5,
-    include_content: bool = False,
-    max_files: int = 100,
-    max_tokens_per_file: int = 1000,
-    sample_only: bool = False,
-    ignore_patterns: list[str] | None = None,
-    include_gitignore: bool = True,
-    include_default_ignores: bool = True
-)
-```
-
-### `analyze_token_usage`
-
-Analyzes token usage for a directory or file to estimate LLM processing requirements.
-
-```python
-analyze_token_usage(
-    path: str,
-    include_file_details: bool = False,
-    ignore_patterns: list[str] | None = None,
-    include_gitignore: bool = True,
-    include_default_ignores: bool = True
-)
-```
-
-### `generate_directory_report`
-
-Generates a comprehensive markdown report about a directory with token statistics.
-
-```python
-generate_directory_report(
-    directory: str, 
-    depth: int = 3,
-    include_file_content: bool = True,
-    max_files_with_content: int = 5,
-    max_tokens_per_file: int = 1000,
-    sample_only: bool = False,
-    ignore_patterns: list[str] | None = None,
-    include_gitignore: bool = True,
-    include_default_ignores: bool = True
-)
-```
-
-### `copy_file_to_destination`
-
-Copy a file from source path to destination path.
-
-```python
-copy_file_to_destination(
-    source_path: str,
-    destination_path: str
-)
-```
-
-## Default Ignore Patterns
-
-TokenScope automatically ignores common directories and files:
-
-```python
-DEFAULT_IGNORE_PATTERNS = [
-    ".git/",
-    ".venv/",
-    "venv/",
-    "__pycache__/",
-    "node_modules/",
-    ".pytest_cache/",
-    ".ipynb_checkpoints/",
-    ".DS_Store",
-    "*.pyc",
-    "*.pyo",
-    "*.pyd",
-    "*.so",
-    "*.dll",
-    "*.class",
-    "build/",
-    "dist/",
-    "*.egg-info/",
-    ".tox/",
-    ".coverage",
-    ".idea/",
-    ".vscode/",
-    ".mypy_cache/",
-]
-```
+- All file operations are validated to ensure they're within the specified base directory
+- Attempts to access files outside the base path are rejected
+- The base path is set once when starting the server and cannot be changed without restart
 
 ## License
 
@@ -293,5 +196,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 - Built with [FastMCP](https://github.com/jlowin/fastmcp)
 - Uses [tiktoken](https://github.com/openai/tiktoken) for accurate token counting
-- This same concept was implemented originally in [repoai](https://github.com/cdgaete/repoai)
-- Inspired by the need to efficiently analyze codebases with LLMs
